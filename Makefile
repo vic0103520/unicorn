@@ -24,7 +24,7 @@ ARTIFACTS_DIR = artifacts
 TARGET_DIR = $(RUST_TARGET_DIR)
 LS_REGISTER = /System/Library/Frameworks/CoreServices.framework/Versions/Current/Frameworks/LaunchServices.framework/Versions/Current/Support/lsregister
 
-.PHONY: all build-adapter-uniffi update-artifacts-for-macos build-macos install-macos clean-macos clean logs logs-live test lint fix
+.PHONY: all build-adapter-uniffi update-artifacts-for-macos build-macos install-macos clean-macos clean logs logs-live test lint format fix
 
 # Default
 all: build-macos
@@ -91,8 +91,11 @@ lint:
 	cargo fmt -- --check
 	cargo clippy --workspace -- -D warnings
 
-fix:
+format:
+	@echo "🎨 Formatting Rust code..."
 	cargo fmt
+
+fix: format
 	cargo clippy --workspace --fix --allow-dirty
 
 logs:

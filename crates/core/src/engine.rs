@@ -120,7 +120,7 @@ impl Engine {
                 if let Some(next_node_arc) = next_node_arc {
                     if next_node_arc.children.is_empty() {
                         let candidates = next_node_arc.candidates.as_ref();
-                        let text = if candidates.map_or(true, |v| v.is_empty()) {
+                        let text = if candidates.is_none_or(|v| v.is_empty()) {
                             // No children, no candidates: commit buffer + char
                             format!("{}{}", self.buffer, c)
                         } else if let Some(candidates) = candidates
@@ -256,7 +256,7 @@ mod tests {
     fn test_real_world_sequence() {
         let mut engine = Engine::new(TEST_JSON).unwrap();
         // 1. Activate
-        engine.process_key('\\'); 
+        engine.process_key('\\');
 
         // 2. Type "==" -> "≡"
         engine.process_key('=');
@@ -272,7 +272,7 @@ mod tests {
         assert_eq!(res, vec![EngineAction::Commit("⟨".to_string())]);
         assert!(!engine.active);
 
-         // 4. Type "\>" -> "⟩"
+        // 4. Type "\>" -> "⟩"
         engine.process_key('\\');
         let res = engine.process_key('>');
         assert_eq!(res, vec![EngineAction::Commit("⟩".to_string())]);

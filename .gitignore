@@ -1,0 +1,26 @@
+# Rust
+target/
+**/*.rs.bk
+
+# macOS
+.DS_Store
+*.swp
+*~
+
+# Xcode
+build/
+DerivedData/
+xcuserdata/
+*.mode1v3
+*.mode2v3
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Input Method Specific (Build Artifacts)
+apps/macos/Library/
+apps/macos/unicorn.swiftmodule/
+apps/macos/UnicornCore/
+apps/macos/unicorn/keymap.json
+artifacts/

@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-release:
+    name: Build Release Artifacts
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.92.0
+          targets: aarch64-apple-darwin
+
+      - name: Build macOS App
+        run: |
+          make update-artifacts-for-macos
+          # Force release configuration for Xcode if set up, currently Makefile uses Debug
+          # For a real release, you'd want to modify Makefile to support CONFIG=Release
+          make build-macos
+
+      - name: Archive App
+        run: |
+          cd apps/macos/build/
+          # Ideally, we would archive the derived data product, but for now we zip the Debug build output
+          # Note: Makefile installs to ~/Library... which is not accessible here easily.
+          # But the build artifact is in apps/macos/build/unicorn.build/...
+          # Let's assume standard Xcode output location derived from the Makefile
+          # The Makefile effectively does: xcodebuild ... build
+          # By default, xcodebuild outputs to `apps/macos/build/Release` or `Debug`.
+          # We'll try to zip `apps/macos/build/Debug/unicorn.app` since Makefile uses Debug config currently.
+          
+          # FUTURE TODO: Update Makefile to support release builds.
+          
+          # Find the app
+          APP_PATH=$(find . -name "unicorn.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "::error::Could not find unicorn.app!"
+            exit 1
+          fi
+          
+          echo "Found app at: $APP_PATH"
+          zip -r unicorn-macos.zip "$APP_PATH"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: apps/macos/build/unicorn-macos.zip
+          draft: true
+          prerelease: false
+          generate_release_notes: true

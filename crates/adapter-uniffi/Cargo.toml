@@ -1,0 +1,17 @@
+[package]
+name = "unicorn-adapter-uniffi"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib", "cdylib"]
+name = "unicorn_uniffi"
+
+[dependencies]
+uniffi = { workspace = true, features = ["tokio", "cli"] }
+unicorn-core = { workspace = true }
+uniffi_bindgen = { workspace = true }
+thiserror = { workspace = true }
+
+[build-dependencies]
+uniffi = { workspace = true, features = ["build"] }

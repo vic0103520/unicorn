@@ -60,4 +60,4 @@ jobs:
         run: make update-artifacts-for-macos
 
       - name: Build macOS App (Xcode)
-        run: make build-macos
+        run: make build-macos XCODE_FLAGS="CODE_SIGN_IDENTITY=\"\" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO"

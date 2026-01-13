@@ -54,7 +54,7 @@ update-artifacts-for-macos: build-adapter-uniffi
 # Build the macOS App using xcodebuild
 build-macos: update-artifacts-for-macos
 	@echo "🍏 Building macOS App ($(CONFIG))..."
-	cd $(MACOS_APP_DIR) && xcodebuild -project unicorn.xcodeproj -scheme unicorn -configuration $(CONFIG) ENABLE_APP_INTENTS_METADATA_EXTRACTION=NO build
+	cd $(MACOS_APP_DIR) && xcodebuild -project unicorn.xcodeproj -scheme unicorn -configuration $(CONFIG) ENABLE_APP_INTENTS_METADATA_EXTRACTION=NO $(XCODE_FLAGS) build
 
 # Install the built app via symlink
 install-macos: build-macos
